@@ -1,0 +1,33 @@
+.button {
+    -fx-background-color:black;
+    -fx-font-size:20;
+    -fx-pref-width:125;
+    -fx-pref-height:200;
+    -fx-border-color:white;
+    -fx-background-radius:0;
+    -fx-font-family:"Lucida Console";
+    -fx-text-fill:white;
+    -fx-graphic-text-gap:25;
+    -fx-content-display:top;
+}
+
+#nextButton {
+    -fx-background-color:black;
+    -fx-font-size:20;
+    -fx-pref-width:200;
+    -fx-pref-height:50;
+    -fx-border-color:white;
+    -fx-background-radius:0;
+    -fx-font-family:"Lucida Console";
+    -fx-text-fill:white;
+    
+}
+
+.label {
+    -fx-font-family:"Lucida Console";
+    -fx-font-size:45;
+    -fx-text-fill:white;
+    -fx-pref-width:500;
+    -fx-pref-height:150;
+    -fx-alignment:center;
+}

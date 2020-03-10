@@ -1,0 +1,10 @@
+.root {
+    -fx-background-color:black;
+}
+
+.button {
+    -fx-background-color:grey;
+    -fx-font-size:35;
+    -fx-font-family:"Lucida Console";
+    -fx-background-radius:0;
+}
