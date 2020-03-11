@@ -47,7 +47,8 @@ public class MainMenuController implements Initializable {
         }
         if (mainAP.getChildren().size() == 4) {
             if (mainAP.getChildren().get(3) instanceof CannonChooser == false) {
-                createSubScene();
+                cannonChooser = new CannonChooser();
+                mainAP.getChildren().add(cannonChooser);
             }
         }
         cannonChooser.moveSubScene();
@@ -79,19 +80,21 @@ public class MainMenuController implements Initializable {
 //            System.out.println("Key : " + entry.getKey()
 //                    + " Value : " + entry.getValue());
 //        }
+        for (Object o : mainAP.getChildren()) {
+            if (o instanceof Scores) {
+                ((Scores) o).moveSubScene();
+                return;
+            }
+        }
         Scores s = new Scores(leaderboard);
         mainAP.getChildren().add(s);
         s.moveSubScene();
     }
 
-    private void createSubScene() {
-        cannonChooser = new CannonChooser();
-        mainAP.getChildren().add(cannonChooser);
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mainAP.getStylesheets().add("spaceinvaders/MainMenu.css");
-        createSubScene();
+        cannonChooser = new CannonChooser();
+        mainAP.getChildren().add(cannonChooser);
     }
 }

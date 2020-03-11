@@ -49,16 +49,19 @@ public class CannonChooser extends SubScene {
 
         // init blue button
         Button blueButton = new Button("BLUE");
+        blueButton.setId("BLUE");
         blueButton.setGraphic(BLUE_SPACE_INVADER);
         blueButton.setOnAction(e -> handleButtonClick(e));
 
         // init pink button
         Button pinkButton = new Button("PINK");
+        pinkButton.setId("PINK");
         pinkButton.setGraphic(PINK_SPACE_INVADER);
         pinkButton.setOnAction(e -> handleButtonClick(e));
 
         // init yellow button
         Button yellowButton = new Button("YELLOW");
+        yellowButton.setId("YELLOW");
         yellowButton.setGraphic(YELLOW_SPACE_INVADER);
         yellowButton.setOnAction(e -> handleButtonClick(e));
 
@@ -121,12 +124,10 @@ public class CannonChooser extends SubScene {
     }
 
     private void handleNextButtonRequest(ActionEvent e) {
-        SpaceInvaders.setChosenCannon(selectedButton);
-        System.out.println("selectedID = " + selectedButton.getId());
         NameInputter nameInputter = new NameInputter(selectedButton.getId());
         AnchorPane root = (AnchorPane) this.getRoot();
-        AnchorPane s = (AnchorPane) root.getScene().getRoot();
-        s.getChildren().add(nameInputter);
+        AnchorPane mainAP = (AnchorPane) root.getScene().getRoot();
+        mainAP.getChildren().add(nameInputter);
         nameInputter.moveSubScene();
     }
 

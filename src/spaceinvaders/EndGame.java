@@ -25,7 +25,7 @@ public class EndGame extends SubScene {
     private AnchorPane root;
     private HashMap leaderboard;
 
-    public EndGame(String name, int score) {
+    public EndGame(String name, int score, String cannonColour) {
         super(new AnchorPane(), 530, 350);
         root = (AnchorPane) this.getRoot();
         root.getStylesheets().add("spaceinvaders/EndGame.css");
@@ -43,6 +43,12 @@ public class EndGame extends SubScene {
 
         // init playagain button
         Button playAgain = new Button("PLAY AGAIN");
+        playAgain.setOnAction(e ->{
+            Scene scene = new GameScreen(name, cannonColour);
+            Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            newStage.setScene(scene);
+            newStage.show();
+        });
 
         // init exitbutton
         Button exitButton = new Button("EXIT");

@@ -15,26 +15,32 @@ public class Scores extends SubScene {
     public Scores(Map<String, Integer> scores) {
         super(new AnchorPane(), 560, 440);
         root = (AnchorPane) this.getRoot();
+        root.getStylesheets().add("spaceinvaders/Scores.css");
         setLayoutX(1060);
         setLayoutY(100);
-        
+
         // init titlelabel
-        Label titleLabel = new Label("SCORES");
-        int counter = 0;
+        Label titleLabel = new Label("LEADERBOARD");
+        titleLabel.setId("titleLabel");
+
         // init scoresLabels
-        for(Map.Entry<String, Integer> entry : scores.entrySet()){
+        int counter = 0;
+        for (Map.Entry<String, Integer> entry : scores.entrySet()) {
             counter++;
             Label name = new Label(entry.getKey());
             Label score = new Label(entry.getValue().toString());
             name.setLayoutX(20);
-            name.setLayoutY(20*counter);
-            score.setLayoutX(100);
-            score.setLayoutY(20*counter);
-            root.getChildren().addAll(name,score);
+            name.setLayoutY(40 + (20 * counter));
+            score.setLayoutX(290);
+            score.setLayoutY(40 + (20 * counter));
+            root.getChildren().addAll(name, score);
         }
+
+        root.getChildren().add(titleLabel);
         titleLabel.setLayoutX(20);
         titleLabel.setLayoutY(20);
     }
+
     public void moveSubScene() {
         TranslateTransition transition = new TranslateTransition();
         transition.setDuration(Duration.seconds(0.3));

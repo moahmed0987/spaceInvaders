@@ -2,7 +2,9 @@ package spaceinvaders;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import javafx.animation.FadeTransition;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 public class Enemy extends Sprite {
 
@@ -29,6 +31,12 @@ public class Enemy extends Sprite {
             System.out.println("Error: " + e);
         }
         return i;
+    }
+    
+    public void die(){
+        FadeTransition ft = new FadeTransition(Duration.seconds(0.25), this);
+        ft.setToValue(0);
+        ft.play();
     }
 
 }
