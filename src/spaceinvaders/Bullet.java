@@ -21,14 +21,10 @@ public class Bullet extends Sprite {
     }
 
     public void moveUp() {
-        if (validMove("UP", this.getTranslateY(), this.getTranslateY() - 5)) {
-            this.setTranslateY(this.getTranslateY() - 5);
-        }
+        this.setTranslateY(this.getTranslateY() - 5);
     }
 
     public void moveDown() {
-        if (validMove("DOWN", this.getTranslateY(), this.getTranslateY() + 5)) {
-            this.setTranslateY(this.getTranslateY() + 5);
-        }
+        this.setTranslateY(this.getTranslateY() + 5);
     }
 }

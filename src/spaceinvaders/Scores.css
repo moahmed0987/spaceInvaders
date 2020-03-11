@@ -15,3 +15,18 @@
     -fx-pref-width:500;
     -fx-pref-height:40;
 }
+
+/* anchorpane inside scrollpane*/
+#spContent {
+    -fx-background-color:grey;
+}
+
+/* actual scrollpane */
+#sp {
+    -fx-background-color:grey;
+}
+
+/* scrollbar of scrollpane */
+#sp .scroll-bar:vertical{
+    -fx-background-color:grey;
+}

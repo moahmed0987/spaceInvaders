@@ -76,10 +76,6 @@ public class MainMenuController implements Initializable {
     private void handleScoresRequest(ActionEvent e) {
         Leaderboard lb = new Leaderboard();
         Map<String, Integer> leaderboard = lb.get();
-//        for (Map.Entry<String, Integer> entry : leaderboard.entrySet()) {
-//            System.out.println("Key : " + entry.getKey()
-//                    + " Value : " + entry.getValue());
-//        }
         for (Object o : mainAP.getChildren()) {
             if (o instanceof Scores) {
                 ((Scores) o).moveSubScene();

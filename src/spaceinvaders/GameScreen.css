@@ -1,3 +1,9 @@
 .root{
     -fx-background-color:black;
 }
+
+.label {
+    -fx-text-fill:white;
+    -fx-font-size:20;
+}
+

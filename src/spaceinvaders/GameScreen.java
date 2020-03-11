@@ -4,14 +4,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 
 public class GameScreen extends Scene {
 
@@ -24,12 +24,11 @@ public class GameScreen extends Scene {
     private AnimationTimer timer;
     private int score;
     private String name;
-    private static final Random randWidth = new Random((long) (WIDTH - 100));
-    private static final Random randHeight = new Random((long) (HEIGHT - 100));
     private static Bounds BOUNDARIES;
     private boolean playerLeft, playerRight;
     private String cannonColour;
-    private Label scoreLabel;
+    private Label scoreLabel, healthLabel;
+    private HealthBar healthBar = new HealthBar();
 
     public GameScreen(String name, String cannonColour) {
         super(new AnchorPane(), WIDTH, HEIGHT);
@@ -72,13 +71,25 @@ public class GameScreen extends Scene {
 
         playerCannon = new PlayerCannon(cannonImage);
         scoreLabel = new Label("SCORE: " + score);
-        scoreLabel.setLayoutX(0);
-        scoreLabel.setLayoutY(0);
-        root.getChildren().addAll(playerCannon, scoreLabel);
-        System.out.println(WIDTH);
-        System.out.println(playerCannon.getWidth());
+        scoreLabel.setLayoutX(10);
+        scoreLabel.setLayoutY(10);
+        healthLabel = new Label("HEALTH: " + playerCannon.getHealth());
+
+        Rectangle deathBar = new Rectangle(WIDTH, 25);
+        deathBar.setLayoutX(0);
+        deathBar.setLayoutY(HEIGHT - 150);
+        deathBar.setFill(Paint.valueOf("white"));
+
+        root.getChildren().addAll(playerCannon, scoreLabel, healthBar, healthLabel, deathBar);
+
+        AnchorPane.setTopAnchor(healthLabel, Double.valueOf(20));
+        AnchorPane.setRightAnchor(healthLabel, Double.valueOf(30));
+        AnchorPane.setTopAnchor(healthBar, Double.valueOf(20));
+        AnchorPane.setRightAnchor(healthBar, Double.valueOf(20));
+
         playerCannon.setTranslateX((WIDTH - playerCannon.getWidth()) / 2);
         playerCannon.setTranslateY(HEIGHT - 100);
+
         this.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case LEFT:
@@ -92,8 +103,8 @@ public class GameScreen extends Scene {
                     break;
             }
         });
-        this.setOnKeyReleased(e ->{
-            switch(e.getCode()){
+        this.setOnKeyReleased(e -> {
+            switch (e.getCode()) {
                 case LEFT:
                     playerLeft = false;
                 case RIGHT:
@@ -120,15 +131,9 @@ public class GameScreen extends Scene {
         t += 0.016;
 
         if (playerLeft) {
-//            if (playerCannon.validMove("LEFT", playerCannon.getTranslateX(), playerCannon.getTranslateX() - 10)) {
-//                playerCannon.setTranslateX(playerCannon.getTranslateX() - 10);
-//            }
             playerCannon.moveLeft(10);
         }
         if (playerRight) {
-//            if (playerCannon.validMove("RIGHT", playerCannon.getTranslateX(), playerCannon.getTranslateX() + 10)) {
-//                playerCannon.setTranslateX(playerCannon.getTranslateX() + 10);
-//            }
             playerCannon.moveRight(10);
         }
 
@@ -149,9 +154,11 @@ public class GameScreen extends Scene {
                 case "enemyBullet":
                     bullet.moveDown();
                     if (bullet.getBoundsInParent().intersects(playerCannon.getBoundsInParent())) {
-                        playerCannon.setHealth(playerCannon.getHealth() - 100);
-//****************************************************************************************************************************************************************
+                        playerCannon.setHealth(playerCannon.getHealth() - 10);
                         bullet.setDead(true);
+                        // update healthlabel
+                        healthLabel.setText("HEALTH: " + playerCannon.getHealth());
+                        healthBar.updateHealthBar(playerCannon.getHealth());
                     }
                     break;
                 case "playerBullet":
@@ -207,10 +214,10 @@ public class GameScreen extends Scene {
                 root.getChildren().remove(e);
             }
         }
-        
+
         // remove dead bullets
-        for(Bullet b : bullets){
-            if(b.isDead()){
+        for (Bullet b : bullets) {
+            if (b.isDead()) {
                 root.getChildren().remove(b);
             }
         }
@@ -224,9 +231,15 @@ public class GameScreen extends Scene {
         if (t > 2) {
             t = 0;
         }
-        
+
         // update scorelabel
         scoreLabel.setText("SCORE: " + score);
+
+        // update healthlabel
+        healthLabel.setText("HEALTH: " + playerCannon.getHealth());
+
+        healthBar.updateHealthBar(playerCannon.getHealth());
+        System.out.println("SCORELABELHEIGHT = " + scoreLabel.getHeight());
     }
 
     private void showEndGame() {

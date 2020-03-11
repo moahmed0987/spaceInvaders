@@ -1,10 +1,17 @@
 package spaceinvaders;
 
 import java.util.Map;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import static javafx.scene.layout.GridPane.REMAINING;
 import javafx.util.Duration;
 
 public class Scores extends SubScene {
@@ -23,22 +30,41 @@ public class Scores extends SubScene {
         Label titleLabel = new Label("LEADERBOARD");
         titleLabel.setId("titleLabel");
 
-        // init scoresLabels
+        // init namesandscoresgp
+        GridPane nameAndScoresGP = new GridPane();
         int counter = 0;
         for (Map.Entry<String, Integer> entry : scores.entrySet()) {
             counter++;
             Label name = new Label(entry.getKey());
             Label score = new Label(entry.getValue().toString());
-            name.setLayoutX(20);
-            name.setLayoutY(40 + (20 * counter));
-            score.setLayoutX(290);
-            score.setLayoutY(40 + (20 * counter));
-            root.getChildren().addAll(name, score);
+            GridPane.setConstraints(name, 1, counter);
+            GridPane.setConstraints(score, 2, counter);
+            nameAndScoresGP.getChildren().addAll(name, score);
         }
 
-        root.getChildren().add(titleLabel);
+        // init scrollpane
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setId("sp");
+        scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        scrollPane.setPrefHeight(330);
+
+        // set coordinates inside scrollpane
+        nameAndScoresGP.setLayoutX(20);
+        nameAndScoresGP.setLayoutY(0);
+
+        // set coordinates inside root
         titleLabel.setLayoutX(20);
         titleLabel.setLayoutY(20);
+        scrollPane.setLayoutX(0);
+        scrollPane.setLayoutY(80);
+
+        AnchorPane scrollPaneContent = new AnchorPane();
+        scrollPaneContent.setId("spContent");
+        scrollPaneContent.getChildren().add(nameAndScoresGP);
+        scrollPane.setContent(scrollPaneContent);
+        root.getChildren().addAll(scrollPane, titleLabel);
+
     }
 
     public void moveSubScene() {
@@ -55,4 +81,27 @@ public class Scores extends SubScene {
         transition.play();
     }
 
+    private void textScroll(Label name) {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(30000), name);
+        tt.setFromX(-10);
+        tt.setToX(260);
+        tt.setCycleCount(Timeline.INDEFINITE);
+        tt.setAutoReverse(false);
+        tt.play();
+
+        double sceneWidth = root.getWidth();
+        double msgWidth = name.getLayoutBounds().getWidth();
+
+        KeyValue initKeyValue = new KeyValue(name.translateXProperty(), sceneWidth);
+        KeyFrame initFrame = new KeyFrame(Duration.ZERO, initKeyValue);
+
+        KeyValue endKeyValue = new KeyValue(name.translateXProperty(), -1.0
+                * msgWidth);
+        KeyFrame endFrame = new KeyFrame(Duration.seconds(3), endKeyValue);
+
+        Timeline timeline = new Timeline(initFrame, endFrame);
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
 }
