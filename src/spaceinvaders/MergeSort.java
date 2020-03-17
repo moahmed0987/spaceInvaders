@@ -6,9 +6,6 @@ import java.util.Map;
 
 public class MergeSort {
 
-    public MergeSort() {
-    }
-
     public static void mergeSort(List<Map.Entry<String, Integer>> list, int size) {
         if (size < 2) {
             return;
@@ -23,18 +20,18 @@ public class MergeSort {
         for (int i = mid; i < size; i++) {
             rightArray.add(i - mid, list.get(i));
         }
-        
+
         mergeSort(leftArray, mid);
         mergeSort(rightArray, size - mid);
 
         merge(list, leftArray, rightArray, mid, size - mid);
     }
 
-    public static void merge(List<Map.Entry<String, Integer>> list, List<Map.Entry<String,Integer>> leftArray, List<Map.Entry<String,Integer>> rightArray, int left, int right) {
+    public static void merge(List<Map.Entry<String, Integer>> list, List<Map.Entry<String, Integer>> leftArray, List<Map.Entry<String, Integer>> rightArray, int left, int right) {
 
         int i = 0, j = 0, k = 0;
         while (i < left && j < right) {
-            
+
             if (leftArray.get(i).getValue() <= rightArray.get(j).getValue()) {
                 list.set(k++, (Map.Entry<String, Integer>) leftArray.get(i++));
             } else {

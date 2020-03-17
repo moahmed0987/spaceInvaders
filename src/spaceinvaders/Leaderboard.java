@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -43,7 +42,7 @@ public class Leaderboard {
     private static Map<String, Integer> sortByValue(Map<String, Integer> unsortedMap) {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(unsortedMap.entrySet());
         MergeSort.mergeSort(list, list.size());
-        
+
         Map<String, Integer> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<String, Integer> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());

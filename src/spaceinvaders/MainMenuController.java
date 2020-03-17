@@ -2,7 +2,6 @@ package spaceinvaders;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -37,31 +36,32 @@ public class MainMenuController implements Initializable {
 
     // *****************************************************************************************************************
     // find a way to clean up this disgusting code
+    //// if(subscene.ishidden()){}
     @FXML
     private void handlePlayRequest(ActionEvent e) throws IOException {
         System.out.println(mainAP.getChildren());
-        if (mainAP.getChildren().size() > 5) {
+        if (mainAP.getChildren().size() > 6) {
             for (int o = 5; o < mainAP.getChildren().size(); o++) {
                 mainAP.getChildren().remove(o);
             }
         }
-        if (mainAP.getChildren().size() == 4) {
-            if (mainAP.getChildren().get(3) instanceof CannonChooser == false) {
+        if (mainAP.getChildren().size() == 5) {
+            if (mainAP.getChildren().get(4) instanceof CannonChooser == false) {
                 cannonChooser = new CannonChooser();
                 mainAP.getChildren().add(cannonChooser);
             }
         }
         cannonChooser.moveSubScene();
-        if (mainAP.getChildren().size() == 5) {
-            if (mainAP.getChildren().get(4) instanceof NameInputter) {
-                nameInputter = (NameInputter) (mainAP.getChildren().get(4));
+        if (mainAP.getChildren().size() == 6) {
+            if (mainAP.getChildren().get(5) instanceof NameInputter) {
+                nameInputter = (NameInputter) (mainAP.getChildren().get(5));
                 if (nameInputter.isHidden() == false) {
                     nameInputter.moveSubScene();
                 }
             }
         }
-        if (mainAP.getChildren().size() == 5 && (cannonChooser.isHidden() == false)) {
-            mainAP.getChildren().remove(4);
+        if (mainAP.getChildren().size() == 6 && (cannonChooser.isHidden() == false)) {
+            mainAP.getChildren().remove(5);
         }
     }
     // *****************************************************************************************************************
@@ -85,6 +85,11 @@ public class MainMenuController implements Initializable {
         Scores s = new Scores(leaderboard);
         mainAP.getChildren().add(s);
         s.moveSubScene();
+    }
+    
+    @FXML
+    private void handleInstructionsRequest(ActionEvent e) {
+        Instructions.display();
     }
 
     @Override

@@ -11,7 +11,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import static javafx.scene.layout.GridPane.REMAINING;
 import javafx.util.Duration;
 
 public class Scores extends SubScene {

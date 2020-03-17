@@ -17,7 +17,7 @@ public class GameScreen extends Scene {
     private static final double WIDTH = 1060;
     private static final double HEIGHT = 700;
     private Image cannonImage;
-    private double t;
+    private double timeForTimer;
     private AnchorPane root;
     private PlayerCannon playerCannon;
     private AnimationTimer gameTimer;
@@ -26,7 +26,7 @@ public class GameScreen extends Scene {
     private boolean playerToMoveLeft, playerToMoveRight;
     private String cannonColour;
     private final Label scoreLabel, healthLabel;
-    private HealthBar healthBar = new HealthBar();
+    private final HealthBar healthBar = new HealthBar();
 
     // contructor for a new gamescreen
     public GameScreen(String playerName, String cannonColour) {
@@ -86,7 +86,7 @@ public class GameScreen extends Scene {
         // init healthlabel
         healthLabel = new Label("HEALTH: " + playerCannon.getHealth());
 
-        // init deathbar ???
+        // TODO init deathbar ???
         Rectangle deathBar = new Rectangle(WIDTH, 25);
         deathBar.setLayoutX(0);
         deathBar.setLayoutY(HEIGHT - 150);
@@ -152,7 +152,7 @@ public class GameScreen extends Scene {
     // update method for gametimer
     private void updateGameFrame() {
         // increment timer
-        t += 0.016;
+        timeForTimer += 0.016;
 
         // moves playercannon left if variables are true
         if (playerToMoveLeft) {
@@ -216,7 +216,7 @@ public class GameScreen extends Scene {
 
         // enemies shoot randomly
         allEnemies.forEach(enemy -> {
-            if (t > 2 && !enemy.isHidden()) {
+            if (timeForTimer > 2) {
                 if (Math.random() < 0.3) {
                     shoot(enemy);
                 }
@@ -224,13 +224,12 @@ public class GameScreen extends Scene {
         });
 
         // move enemies
+        // TODO move both x and down at the same time (diagonal)
         allEnemies.forEach(enemy -> {
             double r = Math.random();
-            if (t > 2) {
+            if (timeForTimer > 2) {
                 if (r < 0.5) { // 1/4 chance of left
                     moveEnemy("MOVEX", enemy);
-//                } else if (r > 0.25 && r < 0.5) { // 1/4 chance of right
-//                    moveEnemy("RIGHT", enemy);
                 } else if (r > 0.5) { // 1/2 chance of down
                     moveEnemy("DOWN", enemy);
                 }
@@ -244,17 +243,10 @@ public class GameScreen extends Scene {
             showEndGame();
         }
 
-        // remove dead enemies
-        for (Enemy e : allEnemies) {
-            if (e.isDead()) {
-                root.getChildren().remove(e);
-            }
-        }
-
         // remove dead bullets
-        for (Bullet b : allBullets) {
-            if (b.isDead()) {
-                root.getChildren().remove(b);
+        for (Bullet bullet : allBullets) {
+            if (bullet.isDead()) {
+                root.getChildren().remove(bullet);
             }
         }
 
@@ -264,11 +256,12 @@ public class GameScreen extends Scene {
         }
 
         // reset timer
-        if (t > 2) {
-            t = 0;
+        if (timeForTimer > 2) {
+            timeForTimer = 0;
         }
     }
 
+    // shown when player dies
     private void showEndGame() {
         EndGame eg = new EndGame(playerName, score, cannonColour);
         eg.setLayoutX(265 + 1060);
@@ -277,19 +270,25 @@ public class GameScreen extends Scene {
         eg.moveSubScene();
     }
 
+    // handles enemy movements
     private void moveEnemy(String direction, Enemy e) {
         switch (direction) {
+            // move left or right
             case "MOVEX": {
+                // calculates the new position (half of it's distance in the x direction away from playercannon)
                 double newEnemyX = e.getTranslateX() + ((playerCannon.getTranslateX() - e.getTranslateX()) * 0.5);
+                // moves to the new location
                 e.moveX(newEnemyX);
                 break;
             }
+            // move down
             case "DOWN": {
-                int randY = (int) ((Math.random() * 500) / 5);
+                // random number between 0 and 1000 exclusive
+                double randY = ((Math.random() * 100));
+                // move to new location
                 e.moveDown(randY);
                 break;
             }
         }
     }
-
 }

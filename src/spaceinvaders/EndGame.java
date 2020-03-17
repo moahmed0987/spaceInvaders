@@ -1,11 +1,6 @@
 package spaceinvaders;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXMLLoader;
@@ -23,17 +18,15 @@ public class EndGame extends SubScene {
 
     private boolean isHidden = true;
     private AnchorPane root;
-    private HashMap leaderboard;
 
     public EndGame(String name, int score, String cannonColour) {
         super(new AnchorPane(), 530, 350);
         root = (AnchorPane) this.getRoot();
         root.getStylesheets().add("spaceinvaders/EndGame.css");
-        
-        
+
         Leaderboard lb = new Leaderboard();
-        lb.add(name,score);
-        
+        lb.add(name, score);
+
         // init gameover label
         Label gameOver = new Label("GAME OVER!");
 
@@ -43,7 +36,7 @@ public class EndGame extends SubScene {
 
         // init playagain button
         Button playAgain = new Button("PLAY AGAIN");
-        playAgain.setOnAction(e ->{
+        playAgain.setOnAction(e -> {
             Scene scene = new GameScreen(name, cannonColour);
             Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             newStage.setScene(scene);
@@ -66,6 +59,7 @@ public class EndGame extends SubScene {
 
         });
 
+        // set coordinates of components in root
         gameOver.setLayoutX(20);
         gameOver.setLayoutY(20);
         details.setLayoutX(20);
@@ -74,12 +68,16 @@ public class EndGame extends SubScene {
         playAgain.setLayoutY(210);
         exitButton.setLayoutX(165);
         exitButton.setLayoutY(280);
-        root.getChildren().addAll(gameOver, playAgain, exitButton, details);
+        
+        // add components to root
+        root.getChildren().addAll(gameOver, details, playAgain, exitButton);
 
+        // set layout of this subscene in gamescreen anchorpane
         this.setLayoutX(265 + 1060);
         this.setLayoutY(175);
     }
 
+    // moves the subscreen when called
     public void moveSubScene() {
         TranslateTransition transition = new TranslateTransition();
         transition.setDuration(Duration.seconds(0.3));

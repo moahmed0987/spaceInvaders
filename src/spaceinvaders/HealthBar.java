@@ -20,7 +20,7 @@ public class HealthBar extends HBox {
         this.lostHealth = 100 - newHealth;
         lost = new Rectangle(lostHealth * 2, 30, Paint.valueOf("black"));
         remaining = new Rectangle(remainingHealth * 2, 30, Paint.valueOf("green"));
-        
+
         this.getChildren().set(0, remaining);
         this.getChildren().set(1, lost);
         if (remainingHealth <= 30) {

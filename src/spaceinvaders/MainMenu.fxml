@@ -4,9 +4,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane fx:id="mainAP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1060.0" stylesheets="@MainMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="spaceinvaders.MainMenuController">
-   <children>
-      <Button fx:id="playButton" layoutX="100.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePlayRequest" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="100.0" prefWidth="200.0" text="PLAY" />
-      <Button fx:id="scoresButton" layoutX="100.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleScoresRequest" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="100.0" prefWidth="200.0" text="SCORES" />
-      <Button fx:id="exitButton" layoutX="100.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleExitRequest" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="100.0" prefWidth="200.0" text="EXIT" />
-   </children>
+    <children>
+        <Button fx:id="playButton" layoutX="100.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePlayRequest" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="100.0" prefWidth="200.0" text="PLAY" />
+        <Button fx:id="instructionsButton" layoutX="100.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleInstructionsRequest" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="100.0" prefWidth="200.0" text="INSTRUCTIONS" />
+        <Button fx:id="scoresButton" layoutX="100.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleScoresRequest" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="100.0" prefWidth="200.0" text="SCORES" />
+        <Button fx:id="exitButton" layoutX="100.0" layoutY="550.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleExitRequest" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="100.0" prefWidth="200.0" text="EXIT" />
+    </children>
 </AnchorPane>

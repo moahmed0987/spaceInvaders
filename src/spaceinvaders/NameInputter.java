@@ -108,7 +108,7 @@ public class NameInputter extends SubScene {
         nextButton.setLayoutY(370);
     }
 
-    private void hideNextButton() {
+private void hideNextButton() {
         if (!nextButtonShowing) {
             return;
         }
@@ -120,13 +120,11 @@ public class NameInputter extends SubScene {
                 }
             }
         }
-        root.getChildren().f
         root.getChildren().remove(buttonToRemove);
         nextButtonShowing = false;
     }
 
     private void handleNextButtonRequest(Event e) {
-        SpaceInvaders.setName(nameTF.getText());
         Scene scene = new GameScreen(nameTF.getText(), cannonColour);
         Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         newStage.setScene(scene);
