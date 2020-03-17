@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -21,31 +20,40 @@ public class GameScreen extends Scene {
     private double t;
     private AnchorPane root;
     private PlayerCannon playerCannon;
-    private AnimationTimer timer;
+    private AnimationTimer gameTimer;
     private int score;
-    private String name;
-    private static Bounds BOUNDARIES;
-    private boolean playerLeft, playerRight;
+    private String playerName;
+    private boolean playerToMoveLeft, playerToMoveRight;
     private String cannonColour;
-    private Label scoreLabel, healthLabel;
+    private final Label scoreLabel, healthLabel;
     private HealthBar healthBar = new HealthBar();
 
-    public GameScreen(String name, String cannonColour) {
+    // contructor for a new gamescreen
+    public GameScreen(String playerName, String cannonColour) {
+
+        // call to super class
         super(new AnchorPane(), WIDTH, HEIGHT);
-        this.name = name;
+
+        // init private variables
+        this.playerName = playerName;
         this.cannonColour = cannonColour;
-        timer = new AnimationTimer() {
+
+        // create gametimer
+        gameTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update();
+                updateGameFrame();
             }
         };
-        timer.start();
 
+        // start timer
+        gameTimer.start();
+
+        // get this gamescene's layout and assign it to a private variable
         root = (AnchorPane) this.getRoot();
         root.getStylesheets().add("spaceinvaders/GameScreen.css");
-        BOUNDARIES = root.getLayoutBounds();
 
+        // get the image of the player's chosen colour cannon
         try {
             switch (cannonColour) {
                 case "BLACK": {
@@ -69,51 +77,65 @@ public class GameScreen extends Scene {
             System.out.println("Error: " + e);
         }
 
+        // create the playercannon passing the image of it
         playerCannon = new PlayerCannon(cannonImage);
-        scoreLabel = new Label("SCORE: " + score);
-        scoreLabel.setLayoutX(10);
-        scoreLabel.setLayoutY(10);
+
+        // init scorelabel
+        scoreLabel = new Label();
+
+        // init healthlabel
         healthLabel = new Label("HEALTH: " + playerCannon.getHealth());
 
+        // init deathbar ???
         Rectangle deathBar = new Rectangle(WIDTH, 25);
         deathBar.setLayoutX(0);
         deathBar.setLayoutY(HEIGHT - 150);
         deathBar.setFill(Paint.valueOf("white"));
 
+        // add components to root
         root.getChildren().addAll(playerCannon, scoreLabel, healthBar, healthLabel, deathBar);
 
+        // set the position of each component
         AnchorPane.setTopAnchor(healthLabel, Double.valueOf(20));
         AnchorPane.setRightAnchor(healthLabel, Double.valueOf(30));
         AnchorPane.setTopAnchor(healthBar, Double.valueOf(20));
         AnchorPane.setRightAnchor(healthBar, Double.valueOf(20));
+        AnchorPane.setTopAnchor(scoreLabel, Double.valueOf(10));
+        AnchorPane.setLeftAnchor(scoreLabel, Double.valueOf(10));
 
+        // set player's first position to the middle of the screen
         playerCannon.setTranslateX((WIDTH - playerCannon.getWidth()) / 2);
         playerCannon.setTranslateY(HEIGHT - 100);
 
+        // when left or right keys are pressed, set private variables to true (used in updateGameTimer() method for smoother movements)
         this.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case LEFT:
-                    playerLeft = true;
+                    playerToMoveLeft = true;
                     break;
                 case RIGHT:
-                    playerRight = true;
+                    playerToMoveRight = true;
                     break;
                 case UP:
                     shoot(playerCannon);
                     break;
             }
         });
+
+        // set private variables to false when the keys are released
         this.setOnKeyReleased(e -> {
             switch (e.getCode()) {
                 case LEFT:
-                    playerLeft = false;
+                    playerToMoveLeft = false;
                 case RIGHT:
-                    playerRight = false;
+                    playerToMoveRight = false;
             }
         });
+        // create a new level
         newLevel();
     }
 
+    // new level method, adds five new enemies to the screen
     private void newLevel() {
         for (int i = 0; i < 5; i++) {
             Enemy e = new Enemy(90 + i * 100, 150);
@@ -121,54 +143,71 @@ public class GameScreen extends Scene {
         }
     }
 
-    private void shoot(Sprite s) {
-        Bullet b = new Bullet(s.getTranslateX() + (s.getWidth() / 2), s.getTranslateY(), s.getType());
+    // shoot method, creates a new bullet at the top center of the given sprite
+    private void shoot(Sprite shootingSprite) {
+        Bullet b = new Bullet(shootingSprite.getTranslateX() + (shootingSprite.getWidth() / 2), shootingSprite.getTranslateY(), shootingSprite.getType());
         root.getChildren().add(b);
     }
 
-    private void update() {
+    // update method for gametimer
+    private void updateGameFrame() {
         // increment timer
         t += 0.016;
 
-        if (playerLeft) {
+        // moves playercannon left if variables are true
+        if (playerToMoveLeft) {
             playerCannon.moveLeft(10);
         }
-        if (playerRight) {
+        // moves playercannon right if variables are true
+        if (playerToMoveRight) {
             playerCannon.moveRight(10);
         }
 
-        // get sprites and add to lists
-        List<Bullet> bullets = new ArrayList<>();
-        List<Enemy> enemies = new ArrayList<>();
-        for (Object o : root.getChildren()) {
-            if (o instanceof Bullet) {
-                bullets.add((Bullet) o);
-            } else if (o instanceof Enemy) {
-                enemies.add((Enemy) o);
+        // adds sprites currently on screen to lists for reference
+        List<Bullet> allBullets = new ArrayList<>();
+        List<Enemy> allEnemies = new ArrayList<>();
+        for (Object spriteOnScreen : root.getChildren()) {
+            if (spriteOnScreen instanceof Bullet) {
+                allBullets.add((Bullet) spriteOnScreen);
+            } else if (spriteOnScreen instanceof Enemy) {
+                allEnemies.add((Enemy) spriteOnScreen);
             }
         }
 
-        // check if bullets have collided with player or enemy
-        bullets.forEach(bullet -> {
+        // checks if bullets have collided with player or enemy
+        allBullets.forEach(bullet -> {
             switch (bullet.getType()) {
                 case "enemyBullet":
+                    // move enemybullet down in all circumstances
                     bullet.moveDown();
+                    // if enemybullet has hit playercannon 
                     if (bullet.getBoundsInParent().intersects(playerCannon.getBoundsInParent())) {
+                        // decrement playercannon.health by 10
                         playerCannon.setHealth(playerCannon.getHealth() - 10);
+                        // set bullet to dead as it has been used up
                         bullet.setDead(true);
-                        // update healthlabel
+                        // update healthlabel with new health
                         healthLabel.setText("HEALTH: " + playerCannon.getHealth());
+                        // update healthbar with new health
                         healthBar.updateHealthBar(playerCannon.getHealth());
                     }
                     break;
                 case "playerBullet":
+                    // move playerbullet up in all circumstances
                     bullet.moveUp();
-                    enemies.forEach(enemy -> {
+                    // check if playerbullet has hit any enemies
+                    allEnemies.forEach(enemy -> {
                         if (bullet.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                            // set enemy to dead as it has been killed
                             enemy.setDead(true);
+                            // make enemy disappear
                             enemy.die();
+                            // set bullet to dead as it has been used up
                             bullet.setDead(true);
+                            // increase the user's score
                             score += 10;
+                            // update scorelabel
+                            scoreLabel.setText("SCORE: " + score);
                         }
                     });
                     break;
@@ -176,8 +215,8 @@ public class GameScreen extends Scene {
         });
 
         // enemies shoot randomly
-        enemies.forEach(enemy -> {
-            if (t > 2) {
+        allEnemies.forEach(enemy -> {
+            if (t > 2 && !enemy.isHidden()) {
                 if (Math.random() < 0.3) {
                     shoot(enemy);
                 }
@@ -185,16 +224,13 @@ public class GameScreen extends Scene {
         });
 
         // move enemies
-        enemies.forEach(enemy -> {
-            System.out.println("here");
+        allEnemies.forEach(enemy -> {
             double r = Math.random();
-            System.out.println(r);
             if (t > 2) {
-
-                if (r < 0.25) { // 1/4 chance of left
-                    moveEnemy("LEFT", enemy);
-                } else if (r > 0.25 && r < 0.5) { // 1/4 chance of right
-                    moveEnemy("RIGHT", enemy);
+                if (r < 0.5) { // 1/4 chance of left
+                    moveEnemy("MOVEX", enemy);
+//                } else if (r > 0.25 && r < 0.5) { // 1/4 chance of right
+//                    moveEnemy("RIGHT", enemy);
                 } else if (r > 0.5) { // 1/2 chance of down
                     moveEnemy("DOWN", enemy);
                 }
@@ -204,26 +240,26 @@ public class GameScreen extends Scene {
         // check if player is dead
         if (playerCannon.getHealth() <= 0) {
             playerCannon.setDead(true);
-            timer.stop();
+            gameTimer.stop();
             showEndGame();
         }
 
         // remove dead enemies
-        for (Enemy e : enemies) {
+        for (Enemy e : allEnemies) {
             if (e.isDead()) {
                 root.getChildren().remove(e);
             }
         }
 
         // remove dead bullets
-        for (Bullet b : bullets) {
+        for (Bullet b : allBullets) {
             if (b.isDead()) {
                 root.getChildren().remove(b);
             }
         }
 
         // newlevel if all enemies are dead
-        if (enemies.isEmpty()) {
+        if (allEnemies.isEmpty()) {
             newLevel();
         }
 
@@ -231,19 +267,10 @@ public class GameScreen extends Scene {
         if (t > 2) {
             t = 0;
         }
-
-        // update scorelabel
-        scoreLabel.setText("SCORE: " + score);
-
-        // update healthlabel
-        healthLabel.setText("HEALTH: " + playerCannon.getHealth());
-
-        healthBar.updateHealthBar(playerCannon.getHealth());
-        System.out.println("SCORELABELHEIGHT = " + scoreLabel.getHeight());
     }
 
     private void showEndGame() {
-        EndGame eg = new EndGame(name, score, cannonColour);
+        EndGame eg = new EndGame(playerName, score, cannonColour);
         eg.setLayoutX(265 + 1060);
         eg.setLayoutY(175);
         root.getChildren().addAll(eg);
@@ -251,29 +278,18 @@ public class GameScreen extends Scene {
     }
 
     private void moveEnemy(String direction, Enemy e) {
-        System.out.println(direction);
         switch (direction) {
-            case "LEFT": {
-                int randX = (int) ((Math.random() * 500) / 5);
-                System.out.println("randX = " + randX);
-                e.setBoundaries(BOUNDARIES);
-                e.moveLeft(randX);
-                break;
-            }
-            case "RIGHT": {
-                int randX = (int) ((Math.random() * 500) / 5);
-                System.out.println("randX = " + randX);
-                e.setBoundaries(BOUNDARIES);
-                e.moveRight(randX);
+            case "MOVEX": {
+                double newEnemyX = e.getTranslateX() + ((playerCannon.getTranslateX() - e.getTranslateX()) * 0.5);
+                e.moveX(newEnemyX);
                 break;
             }
             case "DOWN": {
                 int randY = (int) ((Math.random() * 500) / 5);
-                System.out.println("randY = " + randY);
-                e.setBoundaries(BOUNDARIES);
                 e.moveDown(randY);
                 break;
             }
         }
     }
+
 }

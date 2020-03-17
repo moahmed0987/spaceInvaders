@@ -1,6 +1,5 @@
 package spaceinvaders;
 
-import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -8,22 +7,21 @@ public class Sprite extends ImageView {
 
     private String type;
     private boolean dead;
-    private double width, height;
-    private Bounds BOUNDARIES;
+    private final double widthOfSprite, heightOfSprite;
 
     public Sprite(double x, double y, String type, Image image) {
         super(image);
-        this.width = image.getWidth();
-        this.height = image.getHeight();
+        this.widthOfSprite = image.getWidth();
+        this.heightOfSprite = image.getHeight();
         this.setTranslateX(x);
         this.setTranslateY(y);
         this.type = type;
         this.dead = false;
     }
 
-    public void moveLeft(double x) {
-        if (validMove("LEFT", this.getTranslateX(), this.getTranslateX() - x)) {
-            this.setTranslateX(this.getTranslateX() - x);
+    public void moveLeft(double newX) {
+        if (validMove("LEFT", this.getTranslateX(), this.getTranslateX() - newX)) {
+            this.setTranslateX(this.getTranslateX() - newX);
         }
     }
 
@@ -50,17 +48,20 @@ public class Sprite extends ImageView {
             return true;
         } else {
             switch (direction) {
+                case "MOVEX": {
+                    return nextPos > 0 && nextPos < 1060;
+                }
                 case "LEFT": {
                     return nextPos < currentPos && nextPos >= 0;
                 }
                 case "RIGHT": {
-                    return nextPos > currentPos && nextPos <= (1060 - this.width);
+                    return nextPos > currentPos && nextPos <= (1060 - this.widthOfSprite);
                 }
                 case "UP": {
                     return nextPos < currentPos && nextPos >= 0;
                 }
                 case "DOWN": {
-                    return nextPos > currentPos && nextPos <= (700 - this.height);
+                    return nextPos > currentPos && nextPos <= (700 - this.heightOfSprite);
                 }
             }
         }
@@ -84,15 +85,10 @@ public class Sprite extends ImageView {
     }
 
     public double getWidth() {
-        return this.width;
+        return this.widthOfSprite;
     }
 
     public double getHeight() {
-        return this.height;
-    }
-
-    public void setBoundaries(Bounds BOUNDARIES) {
-        this.BOUNDARIES = BOUNDARIES;
-        System.out.println("BOUNDARIES set: " + BOUNDARIES);
+        return this.heightOfSprite;
     }
 }

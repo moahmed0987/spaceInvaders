@@ -1,7 +1,7 @@
 package spaceinvaders;
 
 import javafx.animation.TranslateTransition;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -17,12 +17,16 @@ import javafx.util.Duration;
 
 public class NameInputter extends SubScene {
 
+    private AnchorPane root;
     private boolean isHidden = true;
     private TextField nameTF;
     private String cannonColour;
+    private Button nextButton;
+    private boolean nextButtonShowing = false;
 
     public NameInputter(String cannonColour) {
         super(new AnchorPane(), 560, 440);
+        root = (AnchorPane) this.getRoot();
         this.cannonColour = cannonColour;
         AnchorPane root = (AnchorPane) this.getRoot();
         root.getStylesheets().add("spaceinvaders/NameInputter.css");
@@ -45,9 +49,21 @@ public class NameInputter extends SubScene {
                 ke.consume();
             }
         });
+        nameTF.setOnKeyPressed((KeyEvent ke) -> {
+            if (nameTF.getText().length() == 1 && ke.getCode().equals(KeyCode.BACK_SPACE)) {
+                hideNextButton();
+            }
+            if (!ke.getCode().equals(KeyCode.BACK_SPACE) && !ke.getCode().equals(KeyCode.ENTER) && !nextButtonShowing) {
+                showNextButton();
+            }
+            if (ke.getCode().equals(KeyCode.ENTER)) {
+                if (nextButtonShowing) {
+                    handleNextButtonRequest(ke);
+                }
+            }
+        });
         // add components to anchorpane
         root.getChildren().addAll(enterNameLabel, backButton, nameTF);
-        showNextButton();
 
         // set coordinates for components
         enterNameLabel.setLayoutX(20);
@@ -82,7 +98,8 @@ public class NameInputter extends SubScene {
     }
 
     private void showNextButton() {
-        Button nextButton = new Button("NEXT");
+        nextButtonShowing = true;
+        nextButton = new Button("NEXT");
         nextButton.setId("nextButton");
         nextButton.setOnAction(e -> handleNextButtonRequest(e));
         AnchorPane root = (AnchorPane) this.getRoot();
@@ -91,7 +108,24 @@ public class NameInputter extends SubScene {
         nextButton.setLayoutY(370);
     }
 
-    private void handleNextButtonRequest(ActionEvent e) {
+    private void hideNextButton() {
+        if (!nextButtonShowing) {
+            return;
+        }
+        Button buttonToRemove = null;
+        for (Node node : root.getChildren()) {
+            if (node.getId() != null) {
+                if (node.getId().equals("nextButton")) {
+                    buttonToRemove = (Button) node;
+                }
+            }
+        }
+        root.getChildren().f
+        root.getChildren().remove(buttonToRemove);
+        nextButtonShowing = false;
+    }
+
+    private void handleNextButtonRequest(Event e) {
         SpaceInvaders.setName(nameTF.getText());
         Scene scene = new GameScreen(nameTF.getText(), cannonColour);
         Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
