@@ -12,8 +12,10 @@ import java.util.Map;
 
 public class Leaderboard {
 
-    private HashMap leaderboard = new HashMap();
+    // init leaderboard hashmap
+    private final HashMap leaderboard = new HashMap();
 
+    // method to add new scores to text file
     public void add(String name, int score) {
         try {
             FileWriter fw = new FileWriter("leaderboard.txt", true);
@@ -24,13 +26,19 @@ public class Leaderboard {
         }
     }
 
+    // gets the leaderboard map to display
     public Map<String, Integer> get() {
         try {
             BufferedReader br = new BufferedReader(new FileReader("leaderboard.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] x = line.split(",");
-                leaderboard.put(x[0], Integer.parseInt(x[1]));
+                // check if the name has already got a high score, if the value being checked is higher
+                // than the one already added to the map, then replace it
+                boolean valid = checkValid(x);
+                if (valid) {
+                    leaderboard.put(x[0], Integer.parseInt(x[1]));
+                }
             }
         } catch (IOException e) {
             System.out.println("Error: " + e);
@@ -48,5 +56,22 @@ public class Leaderboard {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
         return sortedMap;
+    }
+
+    private boolean checkValid(String[] x) {
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(leaderboard.entrySet());
+        for (Map.Entry<String, Integer> entry : list) {
+            if (entry.getKey() != null) {
+                if (entry.getKey().equals(x[0])) {
+                    if (Integer.parseInt(x[1]) >= entry.getValue()) {
+                        System.out.println("true");
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

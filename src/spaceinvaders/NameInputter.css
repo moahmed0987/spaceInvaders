@@ -15,7 +15,7 @@
     -fx-content-display:top;
 }
 
-.label {
+#enterNameLabel {
     -fx-font-family:"Lucida Console";
     -fx-font-size:45;
     -fx-text-fill:white;
@@ -23,6 +23,7 @@
     -fx-pref-height:180;
     -fx-alignment:center;
 }
+
 
 .text-field{
     -fx-pref-width:520;

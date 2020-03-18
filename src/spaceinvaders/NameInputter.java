@@ -20,21 +20,20 @@ public class NameInputter extends SubScene {
     private AnchorPane root;
     private boolean isHidden = true;
     private TextField nameTF;
-    private String cannonColour;
     private Button nextButton;
+    private ErrorLabel errorLabel;
     private boolean nextButtonShowing = false;
 
-    public NameInputter(String cannonColour) {
+    public NameInputter() {
         super(new AnchorPane(), 560, 440);
         root = (AnchorPane) this.getRoot();
-        this.cannonColour = cannonColour;
-        AnchorPane root = (AnchorPane) this.getRoot();
         root.getStylesheets().add("spaceinvaders/NameInputter.css");
         setLayoutX(1060);
         setLayoutY(100);
 
         // init enter name label
         Label enterNameLabel = new Label("ENTER YOUR NAME");
+        enterNameLabel.setId("enterNameLabel");
 
         // init back button
         Button backButton = new Button("BACK");
@@ -42,7 +41,6 @@ public class NameInputter extends SubScene {
 
         // init name textfield
         nameTF = new TextField();
-//        nameTF.setWrapText(true);
         nameTF.setFont(Font.font("Lucida Console"));
         nameTF.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent ke) -> {
             if (ke.getCode().equals(KeyCode.ENTER)) {
@@ -62,8 +60,12 @@ public class NameInputter extends SubScene {
                 }
             }
         });
+
+        // init errorlabel
+        errorLabel = new ErrorLabel("ERROR, USERNAME IS INVALID");
+
         // add components to anchorpane
-        root.getChildren().addAll(enterNameLabel, backButton, nameTF);
+        root.getChildren().addAll(enterNameLabel, backButton, nameTF, errorLabel);
 
         // set coordinates for components
         enterNameLabel.setLayoutX(20);
@@ -72,6 +74,8 @@ public class NameInputter extends SubScene {
         backButton.setLayoutY(20);
         nameTF.setLayoutX(20);
         nameTF.setLayoutY(250);
+        errorLabel.setLayoutX(20);
+        errorLabel.setLayoutY(210);
 
     }
 
@@ -108,7 +112,7 @@ public class NameInputter extends SubScene {
         nextButton.setLayoutY(370);
     }
 
-private void hideNextButton() {
+    private void hideNextButton() {
         if (!nextButtonShowing) {
             return;
         }
@@ -125,9 +129,37 @@ private void hideNextButton() {
     }
 
     private void handleNextButtonRequest(Event e) {
-        Scene scene = new GameScreen(nameTF.getText(), cannonColour);
-        Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        newStage.setScene(scene);
-        newStage.show();
+        boolean valid = confirmName();
+        System.out.println("valid = " + valid);
+        System.out.println("errorLabel.isHidden() = " + errorLabel.isHidden());
+        if (!valid && errorLabel.isHidden()) {
+            toggleErrorLabel();
+        } else if (valid && !errorLabel.isHidden()) {
+            toggleErrorLabel();
+            Scene scene = new GameScreen(nameTF.getText(), MainMenuController.cannonColour);
+            Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            newStage.setScene(scene);
+            newStage.show();
+        }
+    }
+
+    private boolean confirmName() {
+        String name = nameTF.getText();
+        for (char character : name.toCharArray()) {
+            if (!Character.isAlphabetic(character)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void toggleErrorLabel() {
+        if (errorLabel.isHidden()) {
+            errorLabel.setOpacity(1);
+            errorLabel.setHidden(false);
+        } else {
+            errorLabel.setOpacity(0);
+            errorLabel.setHidden(true);
+        }
     }
 }

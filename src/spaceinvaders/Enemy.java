@@ -45,7 +45,7 @@ public class Enemy extends Sprite {
             // remove this enemy from it
             try {
                 root.getChildren().remove(this);
-                // TODO bad practice, find better way to fix
+                // TODO bad programming practice, find better way to fix (is thrown when a bullet hits the enemy whilst it is fading away)
             } catch (NullPointerException npe) {
                 System.out.println("Error: " + npe);
             }

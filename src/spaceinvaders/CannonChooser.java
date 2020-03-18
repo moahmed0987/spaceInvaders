@@ -19,9 +19,11 @@ public class CannonChooser extends SubScene {
     private ImageView BLACK_SPACE_INVADER, BLUE_SPACE_INVADER, PINK_SPACE_INVADER, YELLOW_SPACE_INVADER;
     private boolean isHidden = true;
     private Button selectedButton;
+    private static final double WIDTH = 560;
+    private static final double HEIGHT = 440;
 
     public CannonChooser() {
-        super(new AnchorPane(), 560, 440);
+        super(new AnchorPane(), WIDTH, HEIGHT);
         AnchorPane root = (AnchorPane) this.getRoot();
         root.setStyle("-fx-background-color: grey");
         root.getStylesheets().add("spaceinvaders/CannonChooser.css");
@@ -124,11 +126,18 @@ public class CannonChooser extends SubScene {
     }
 
     private void handleNextButtonRequest(ActionEvent e) {
-        NameInputter nameInputter = new NameInputter(selectedButton.getId());
+        MainMenuController.cannonColour = selectedButton.getId();
+        MainMenuController.setAnySubSceneShowing(true);
+        MainMenuController.setSubSceneShowing(SubScenes.NameInputter);
         AnchorPane root = (AnchorPane) this.getRoot();
         AnchorPane mainAP = (AnchorPane) root.getScene().getRoot();
-        mainAP.getChildren().add(nameInputter);
-        nameInputter.moveSubScene();
+        System.out.println("mainAP.getChildren() = " + mainAP.getChildren());
+        mainAP.getChildren().forEach(node -> {
+            if (node instanceof NameInputter) {
+                this.moveSubScene();
+                ((NameInputter) node).moveSubScene();
+            }
+        });
     }
 
     public boolean isHidden() {

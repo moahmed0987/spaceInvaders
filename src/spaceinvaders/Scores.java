@@ -1,9 +1,6 @@
 package spaceinvaders;
 
 import java.util.Map;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
@@ -17,9 +14,11 @@ public class Scores extends SubScene {
 
     private boolean isHidden = true;
     private AnchorPane root;
+    private Map<String, Integer> leaderboard = new Leaderboard().get();
 
-    public Scores(Map<String, Integer> scores) {
+    public Scores() {
         super(new AnchorPane(), 560, 440);
+        System.out.println("Leaderboard = " + leaderboard);
         root = (AnchorPane) this.getRoot();
         root.getStylesheets().add("spaceinvaders/Scores.css");
         setLayoutX(1060);
@@ -31,9 +30,10 @@ public class Scores extends SubScene {
 
         // init namesandscoresgp
         GridPane nameAndScoresGP = new GridPane();
-        int counter = 0;
-        for (Map.Entry<String, Integer> entry : scores.entrySet()) {
-            counter++;
+        int counter = leaderboard.entrySet().size();
+
+        for (Map.Entry<String, Integer> entry : leaderboard.entrySet()) {
+            counter--;
             Label name = new Label(entry.getKey());
             Label score = new Label(entry.getValue().toString());
             GridPane.setConstraints(name, 1, counter);
@@ -78,29 +78,5 @@ public class Scores extends SubScene {
             isHidden = true;
         }
         transition.play();
-    }
-
-    private void textScroll(Label name) {
-        TranslateTransition tt = new TranslateTransition(Duration.millis(30000), name);
-        tt.setFromX(-10);
-        tt.setToX(260);
-        tt.setCycleCount(Timeline.INDEFINITE);
-        tt.setAutoReverse(false);
-        tt.play();
-
-        double sceneWidth = root.getWidth();
-        double msgWidth = name.getLayoutBounds().getWidth();
-
-        KeyValue initKeyValue = new KeyValue(name.translateXProperty(), sceneWidth);
-        KeyFrame initFrame = new KeyFrame(Duration.ZERO, initKeyValue);
-
-        KeyValue endKeyValue = new KeyValue(name.translateXProperty(), -1.0
-                * msgWidth);
-        KeyFrame endFrame = new KeyFrame(Duration.seconds(3), endKeyValue);
-
-        Timeline timeline = new Timeline(initFrame, endFrame);
-
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
     }
 }

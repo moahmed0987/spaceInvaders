@@ -8,3 +8,10 @@
     -fx-font-family:"Lucida Console";
     -fx-background-radius:0;
 }
+
+#instructionsButton {
+    -fx-background-color:grey;
+    -fx-font-size:22;
+    -fx-font-family:"Lucida Console";
+    -fx-background-radius:0;
+}

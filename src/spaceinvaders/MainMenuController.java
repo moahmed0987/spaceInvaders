@@ -15,8 +15,14 @@ import javafx.stage.Stage;
 
 public class MainMenuController implements Initializable {
 
-    private CannonChooser cannonChooser;
-    private NameInputter nameInputter;
+    private CannonChooser cannonChooser = new CannonChooser();
+    private NameInputter nameInputter = new NameInputter();
+    private Instructions instructions = new Instructions();
+    private Scores scores = new Scores();
+    private static SubScenes subSceneShowing = null;
+    private static boolean anySubSceneShowing = false;
+    public static String name;
+    public static String cannonColour;
 
     @FXML
     private AnchorPane mainAP;
@@ -34,37 +40,50 @@ public class MainMenuController implements Initializable {
         ((Button) e.getSource()).setStyle("-fx-border-color:null");
     }
 
-    // *****************************************************************************************************************
-    // find a way to clean up this disgusting code
-    //// if(subscene.ishidden()){}
     @FXML
-    private void handlePlayRequest(ActionEvent e) throws IOException {
-        System.out.println(mainAP.getChildren());
-        if (mainAP.getChildren().size() > 6) {
-            for (int o = 5; o < mainAP.getChildren().size(); o++) {
-                mainAP.getChildren().remove(o);
-            }
-        }
-        if (mainAP.getChildren().size() == 5) {
-            if (mainAP.getChildren().get(4) instanceof CannonChooser == false) {
-                cannonChooser = new CannonChooser();
-                mainAP.getChildren().add(cannonChooser);
-            }
-        }
-        cannonChooser.moveSubScene();
-        if (mainAP.getChildren().size() == 6) {
-            if (mainAP.getChildren().get(5) instanceof NameInputter) {
-                nameInputter = (NameInputter) (mainAP.getChildren().get(5));
-                if (nameInputter.isHidden() == false) {
+    private void handlePlayRequest(ActionEvent e) {
+        System.out.println("BEFORE PLAYBUTTON");
+        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
+        System.out.println("subSceneShowing = " + subSceneShowing);
+        if (!anySubSceneShowing) {
+            cannonChooser.moveSubScene();
+            anySubSceneShowing = true;
+            subSceneShowing = SubScenes.CannonChooser;
+        } else {
+            switch (subSceneShowing) {
+                case CannonChooser: {
+                    cannonChooser.moveSubScene();
+                    anySubSceneShowing = false;
+                    subSceneShowing = null;
+                    break;
+                }
+                case Instructions: {
+                    instructions.moveSubScene();
+                    cannonChooser.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.CannonChooser;
+                    break;
+                }
+                case NameInputter: {
                     nameInputter.moveSubScene();
+                    cannonChooser.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.CannonChooser;
+                    break;
+                }
+                case Scores: {
+                    scores.moveSubScene();
+                    cannonChooser.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.CannonChooser;
+                    break;
                 }
             }
         }
-        if (mainAP.getChildren().size() == 6 && (cannonChooser.isHidden() == false)) {
-            mainAP.getChildren().remove(5);
-        }
+        System.out.println("AFTER PLAYBUTTON");
+        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
+        System.out.println("subSceneShowing = " + subSceneShowing);
     }
-    // *****************************************************************************************************************
 
     @FXML
     private void handleExitRequest(ActionEvent e) {
@@ -74,28 +93,106 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void handleScoresRequest(ActionEvent e) {
-        Leaderboard lb = new Leaderboard();
-        Map<String, Integer> leaderboard = lb.get();
-        for (Object o : mainAP.getChildren()) {
-            if (o instanceof Scores) {
-                ((Scores) o).moveSubScene();
-                return;
+        System.out.println("BEFORE SCORESBUTTON");
+        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
+        System.out.println("subSceneShowing = " + subSceneShowing);
+        if (!anySubSceneShowing) {
+            scores.moveSubScene();
+            anySubSceneShowing = true;
+            subSceneShowing = SubScenes.Scores;
+        } else {
+            switch (subSceneShowing) {
+                case Scores: {
+                    scores.moveSubScene();
+                    anySubSceneShowing = false;
+                    subSceneShowing = null;
+                    break;
+                }
+                case CannonChooser: {
+                    cannonChooser.moveSubScene();
+                    scores.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.Scores;
+                    break;
+                }
+                case Instructions: {
+                    instructions.moveSubScene();
+                    scores.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.Scores;
+                    break;
+                }
+                case NameInputter: {
+                    nameInputter.moveSubScene();
+                    scores.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.Scores;
+                    break;
+                }
             }
         }
-        Scores s = new Scores(leaderboard);
-        mainAP.getChildren().add(s);
-        s.moveSubScene();
+        System.out.println("AFTER SCORESBUTTON");
+        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
+        System.out.println("subSceneShowing = " + subSceneShowing);
     }
-    
+
     @FXML
     private void handleInstructionsRequest(ActionEvent e) {
-        Instructions.display();
+        System.out.println("BEFORE INSTRUCTIONSBUTTON");
+        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
+        System.out.println("subSceneShowing = " + subSceneShowing);
+        if (!anySubSceneShowing) {
+            instructions.moveSubScene();
+            anySubSceneShowing = true;
+            subSceneShowing = SubScenes.Instructions;
+        } else {
+            switch (subSceneShowing) {
+                case Instructions: {
+                    instructions.moveSubScene();
+                    anySubSceneShowing = false;
+                    subSceneShowing = null;
+                    break;
+                }
+                case CannonChooser: {
+                    cannonChooser.moveSubScene();
+                    instructions.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.Instructions;
+                    break;
+                }
+                case Scores: {
+                    scores.moveSubScene();
+                    instructions.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.Instructions;
+                    break;
+                }
+                case NameInputter: {
+                    nameInputter.moveSubScene();
+                    instructions.moveSubScene();
+                    anySubSceneShowing = true;
+                    subSceneShowing = SubScenes.Instructions;
+                    break;
+                }
+            }
+        }
+        
+        System.out.println("AFTER INSTRUCTIONSBUTTON");
+        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
+        System.out.println("subSceneShowing = " + subSceneShowing);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mainAP.getStylesheets().add("spaceinvaders/MainMenu.css");
-        cannonChooser = new CannonChooser();
-        mainAP.getChildren().add(cannonChooser);
+        mainAP.getChildren().addAll(cannonChooser, instructions, scores, nameInputter);
+    }
+
+    public static void setAnySubSceneShowing(boolean anySubSceneShowing) {
+        MainMenuController.anySubSceneShowing = anySubSceneShowing;
+    }
+
+    public static void setSubSceneShowing(SubScenes subSceneShowing) {
+        MainMenuController.subSceneShowing = subSceneShowing;
     }
 }

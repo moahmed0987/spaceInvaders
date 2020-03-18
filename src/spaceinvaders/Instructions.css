@@ -1,0 +1,13 @@
+.root{
+    -fx-background-color:grey;
+}
+#titleLabel{
+    -fx-font-family:"Lucida Console";
+    -fx-text-fill:white;
+    -fx-font-size:40;
+    -fx-pref-width:500;
+    -fx-pref-height:40;
+}
+.label {
+    -fx-text-fill:white;
+}

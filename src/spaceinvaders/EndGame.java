@@ -1,7 +1,6 @@
 package spaceinvaders;
 
 import java.io.IOException;
-import java.util.HashMap;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

@@ -271,14 +271,14 @@ public class GameScreen extends Scene {
     }
 
     // handles enemy movements
-    private void moveEnemy(String direction, Enemy e) {
+    private void moveEnemy(String direction, Enemy enemy) {
         switch (direction) {
             // move left or right
             case "MOVEX": {
                 // calculates the new position (half of it's distance in the x direction away from playercannon)
-                double newEnemyX = e.getTranslateX() + ((playerCannon.getTranslateX() - e.getTranslateX()) * 0.5);
+                double newEnemyX = enemy.getTranslateX() + ((playerCannon.getTranslateX() - enemy.getTranslateX()) * 0.5);
                 // moves to the new location
-                e.moveX(newEnemyX);
+                enemy.moveX(newEnemyX);
                 break;
             }
             // move down
@@ -286,7 +286,7 @@ public class GameScreen extends Scene {
                 // random number between 0 and 1000 exclusive
                 double randY = ((Math.random() * 100));
                 // move to new location
-                e.moveDown(randY);
+                enemy.moveDown(randY);
                 break;
             }
         }

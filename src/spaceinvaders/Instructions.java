@@ -1,61 +1,56 @@
-package spaceinvaders;
+  package spaceinvaders;
 
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.animation.TranslateTransition;
+import javafx.scene.SubScene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
-// TODO turn into a subscene
-public class Instructions {
-//public class Instructions extends SubScene{
+public class Instructions extends SubScene {
 
-    private static final double WIDTH = 500;
-    private static final double HEIGHT = 400;
-    private static final String TITLE = "Instructions";
-    private static final String INSTRUCTIONS
-            = "Use left and right arrow keys to move\n"
-            + "Use up arrow key to shoot";
+    private static final double WIDTH = 560;
+    private static final double HEIGHT = 440;
+    private AnchorPane root;
+    private boolean isHidden = true;
 
-//    public Instructions() {
-//        super(new AnchorPane(), WIDTH, HEIGHT);
-//    }
-    public static void display() {
-        // init stage
-        Stage window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.initStyle(StageStyle.TRANSPARENT);
-        window.setTitle(TITLE);
+    public Instructions() {
+        super(new AnchorPane(), WIDTH, HEIGHT);
+        root = (AnchorPane) this.getRoot();
+        root.getStylesheets().add("spaceinvaders/Instructions.css");
+        setLayoutX(1060);
+        setLayoutY(100);
 
-        // init messagelabel
-        Label messageLabel = new Label(INSTRUCTIONS);
-        messageLabel.setTextAlignment(TextAlignment.CENTER);
+        // init titlelabel
+        Label titleLabel = new Label("INSTRUCTIONS");
+        titleLabel.setId("titleLabel");
 
-        /// init closebutton
-        Button closeButton = new Button("OK");
-        closeButton.setOnAction(e -> window.close());
+        // init instructionslabel
+        Label instructionsLabel = new Label("Use left and right arrow keys to move\n"
+                + "Use up arrow key to shoot");
+        
+        root.getChildren().addAll(titleLabel, instructionsLabel);
+        titleLabel.setLayoutX(20);
+        titleLabel.setLayoutY(20);
+        instructionsLabel.setLayoutX(20);
+        instructionsLabel.setLayoutY(80);
+    }
 
-        // init layout 
-        AnchorPane layout = new AnchorPane();
-        layout.setPadding(new Insets(20));
+    public void moveSubScene() {
+        TranslateTransition transition = new TranslateTransition();
+        transition.setDuration(Duration.seconds(0.3));
+        transition.setNode(this);
+        if (isHidden) {
+            transition.setToX(-660);
+            isHidden = false;
+        } else {
+            transition.setToX(660);
+            isHidden = true;
+        }
+        transition.play();
+    }
 
-        // set coordinates of components in layout
-        closeButton.setLayoutX(WIDTH - 120);
-        closeButton.setLayoutY(HEIGHT - 70);
-
-        // add components to layout
-        layout.getChildren().addAll(messageLabel, closeButton);
-
-        // init scene
-        Scene scene = new Scene(layout, WIDTH, HEIGHT);
-        scene.getStylesheets().add("spaceinvaders/Instructions.css");
-
-        window.setScene(scene);
-        window.showAndWait();
+    public boolean isHidden() {
+        return isHidden;
     }
 
 }
