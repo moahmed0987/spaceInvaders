@@ -10,8 +10,9 @@ import javafx.util.Duration;
 
 public class Enemy extends Sprite {
 
-    // set private variables
-    private boolean dead = false;
+    // set variables
+    public static final double WIDTH = 100;
+    private boolean removed = false;
 
     // constructor that calls super (sprite) constructor
     public Enemy(double x, double y) {
@@ -22,7 +23,7 @@ public class Enemy extends Sprite {
     private static Image getEnemyImage() {
         Image enemyImage = null;
         try {
-            enemyImage = new Image(new FileInputStream("resources/enemy.png"), 100, 0, true, false);
+            enemyImage = new Image(new FileInputStream("resources/enemy.png"), WIDTH, 0, true, false);
             return enemyImage;
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e);
@@ -42,14 +43,13 @@ public class Enemy extends Sprite {
         removeFromScreen.setOnFinished(e -> {
             // get parent anchorpane (root of gamescreen) 
             AnchorPane root = (AnchorPane) this.getParent();
-            // remove this enemy from it
-            try {
+            // avoids nullpointerexception from repeated bullets
+            if (!this.removed) {
+                // remove this enemy from it
                 root.getChildren().remove(this);
-                // TODO bad programming practice, find better way to fix (is thrown when a bullet hits the enemy whilst it is fading away)
-            } catch (NullPointerException npe) {
-                System.out.println("Error: " + npe);
+                // set removed from screen to true
+                this.removed = true;
             }
-
         });
 
     }
@@ -75,11 +75,23 @@ public class Enemy extends Sprite {
         }
     }
 
-    public boolean isDead() {
-        return dead;
-    }
+    @Override
+    public boolean validMove(String direction, double currentPos, double nextPos) {
+        switch (direction) {
+            case "MOVEX": {
+                return nextPos > 0 && nextPos < 1060;
+            }
+            case "LEFT": {
+                return nextPos < currentPos && nextPos >= 0;
+            }
+            case "RIGHT": {
+                return nextPos > currentPos && nextPos <= (1060 - this.getWidth());
+            }
+            case "DOWN": {
+                return nextPos > currentPos && nextPos <= (550 - this.getHeight());
+            }
+        }
 
-    public void setDead(boolean dead) {
-        this.dead = dead;
+        return false;
     }
 }

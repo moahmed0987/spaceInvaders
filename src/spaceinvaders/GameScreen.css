@@ -7,3 +7,8 @@
     -fx-font-size:20;
 }
 
+#enemiesOnScreenLabel{
+    -fx-pref-width:1020;
+    -fx-font-size:20;
+    -fx-alignment:center;
+}

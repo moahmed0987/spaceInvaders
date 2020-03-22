@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -16,6 +17,7 @@ public class GameScreen extends Scene {
 
     private static final double WIDTH = 1060;
     private static final double HEIGHT = 700;
+    private static final double HEIGHT_OF_ENEMY_AREA = HEIGHT - 150;
     private Image cannonImage;
     private double timeForTimer;
     private AnchorPane root;
@@ -24,9 +26,13 @@ public class GameScreen extends Scene {
     private int score;
     private String playerName;
     private boolean playerToMoveLeft, playerToMoveRight;
+    private boolean playerAlreadyShot = false;
     private String cannonColour;
-    private final Label scoreLabel, healthLabel;
+    private Rectangle homeLine;
+    private final Label scoreLabel, healthLabel, enemiesOnScreenLabel;
     private final HealthBar healthBar = new HealthBar();
+    private int currentLevel = 1;
+    private double enemiesToAdd;
 
     // contructor for a new gamescreen
     public GameScreen(String playerName, String cannonColour) {
@@ -86,20 +92,26 @@ public class GameScreen extends Scene {
         // init healthlabel
         healthLabel = new Label("HEALTH: " + playerCannon.getHealth());
 
-        // TODO init deathbar ???
-        Rectangle deathBar = new Rectangle(WIDTH, 25);
-        deathBar.setLayoutX(0);
-        deathBar.setLayoutY(HEIGHT - 150);
-        deathBar.setFill(Paint.valueOf("white"));
+        // init enemiesonscreenlabel
+        enemiesOnScreenLabel = new Label("ENEMIES ON SCREEN: " + enemiesToAdd);
+        enemiesOnScreenLabel.setId("enemiesOnScreenLabel");
+
+        // init homeline
+        homeLine = new Rectangle(WIDTH, 25, Paint.valueOf("white"));
+        homeLine.setLayoutX(0);
+        homeLine.setLayoutY(HEIGHT - 150);
 
         // add components to root
-        root.getChildren().addAll(playerCannon, scoreLabel, healthBar, healthLabel, deathBar);
+        root.getChildren().addAll(playerCannon, scoreLabel, healthBar, healthLabel, enemiesOnScreenLabel, homeLine);
 
         // set the position of each component
-        AnchorPane.setTopAnchor(healthLabel, Double.valueOf(20));
-        AnchorPane.setRightAnchor(healthLabel, Double.valueOf(30));
-        AnchorPane.setTopAnchor(healthBar, Double.valueOf(20));
-        AnchorPane.setRightAnchor(healthBar, Double.valueOf(20));
+        AnchorPane.setTopAnchor(enemiesOnScreenLabel, Double.valueOf(10));
+        AnchorPane.setLeftAnchor(enemiesOnScreenLabel, Double.valueOf(0));
+        AnchorPane.setRightAnchor(enemiesOnScreenLabel, Double.valueOf(0));
+        AnchorPane.setTopAnchor(healthLabel, Double.valueOf(10));
+        AnchorPane.setRightAnchor(healthLabel, Double.valueOf(20));
+        AnchorPane.setTopAnchor(healthBar, Double.valueOf(10));
+        AnchorPane.setRightAnchor(healthBar, Double.valueOf(10));
         AnchorPane.setTopAnchor(scoreLabel, Double.valueOf(10));
         AnchorPane.setLeftAnchor(scoreLabel, Double.valueOf(10));
 
@@ -129,24 +141,68 @@ public class GameScreen extends Scene {
                     playerToMoveLeft = false;
                 case RIGHT:
                     playerToMoveRight = false;
+                case UP:
+                    playerAlreadyShot = false;
             }
         });
         // create a new level
-        newLevel();
+        newLevel(currentLevel);
     }
 
     // new level method, adds five new enemies to the screen
-    private void newLevel() {
-        for (int i = 0; i < 5; i++) {
-            Enemy e = new Enemy(90 + i * 100, 150);
-            root.getChildren().add(e);
+    private void newLevel(double levelNo) {
+        // starts at five
+        enemiesToAdd = levelNo + 4;
+        enemiesOnScreenLabel.setText("ENEMIES ON SCREEN: " + (int) enemiesToAdd);
+
+        // total rows including last row (8 enemies per full row)
+        int numberOfRows;
+        if (enemiesToAdd % 8 == 0) {
+            numberOfRows = (int) (enemiesToAdd / 8);
+        } else {
+            numberOfRows = (int) (enemiesToAdd / 8) + 1;
         }
+
+        double enemiesInLastRow = enemiesToAdd % 8;
+        if (enemiesInLastRow == 0) {
+            enemiesInLastRow = 8;
+        }
+
+        System.out.println("numberOfRows = " + numberOfRows);
+        System.out.println("enemiesInLastRow = " + enemiesInLastRow);
+
+        // values for each enemy's position
+        double xIncrementPerEnemy = (WIDTH / (enemiesInLastRow + 1));
+        double yIncrememtPerEnemy = (HEIGHT_OF_ENEMY_AREA / (numberOfRows + 1));
+
+        // full rows
+        for (int rowNumber = 1; rowNumber < numberOfRows; rowNumber++) {
+            for (int enemyNumber = 1; enemyNumber <= 8; enemyNumber++) {
+                Enemy e = new Enemy(((WIDTH / 9) * enemyNumber), (rowNumber * yIncrememtPerEnemy));
+                root.getChildren().add(e);
+                e.setTranslateX(e.getTranslateX() - (Enemy.WIDTH / 2));
+            }
+        }
+
+        // last row
+        for (int enemyNumber = 1; enemyNumber <= enemiesInLastRow; enemyNumber++) {
+            Enemy e = new Enemy((xIncrementPerEnemy * enemyNumber), (numberOfRows * yIncrememtPerEnemy));
+            root.getChildren().add(e);
+            e.setTranslateX(e.getTranslateX() - (Enemy.WIDTH / 2));
+        }
+
     }
 
     // shoot method, creates a new bullet at the top center of the given sprite
     private void shoot(Sprite shootingSprite) {
-        Bullet b = new Bullet(shootingSprite.getTranslateX() + (shootingSprite.getWidth() / 2), shootingSprite.getTranslateY(), shootingSprite.getType());
-        root.getChildren().add(b);
+        if (shootingSprite.getType().equals("enemy")) {
+            Bullet b = new Bullet(shootingSprite.getTranslateX() + (shootingSprite.getWidth() / 2), shootingSprite.getTranslateY() + shootingSprite.getHeight(), shootingSprite.getType());
+            root.getChildren().add(b);
+        } else if (shootingSprite.getType().equals("player") && !playerAlreadyShot) {
+            Bullet b = new Bullet(shootingSprite.getTranslateX() + (shootingSprite.getWidth() / 2), shootingSprite.getTranslateY(), shootingSprite.getType());
+            root.getChildren().add(b);
+            playerAlreadyShot = true;
+        }
     }
 
     // update method for gametimer
@@ -224,7 +280,6 @@ public class GameScreen extends Scene {
         });
 
         // move enemies
-        // TODO move both x and down at the same time (diagonal)
         allEnemies.forEach(enemy -> {
             double r = Math.random();
             if (timeForTimer > 2) {
@@ -252,7 +307,8 @@ public class GameScreen extends Scene {
 
         // newlevel if all enemies are dead
         if (allEnemies.isEmpty()) {
-            newLevel();
+            currentLevel++;
+            newLevel(currentLevel);
         }
 
         // reset timer

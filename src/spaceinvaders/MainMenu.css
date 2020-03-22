@@ -7,11 +7,13 @@
     -fx-font-size:35;
     -fx-font-family:"Lucida Console";
     -fx-background-radius:0;
+    -fx-pref-width:200;
+    -fx-pref-height:100;
 }
 
 #instructionsButton {
-    -fx-background-color:grey;
     -fx-font-size:22;
-    -fx-font-family:"Lucida Console";
-    -fx-background-radius:0;
+}
+#scoresButton {
+    -fx-font-size:24;
 }

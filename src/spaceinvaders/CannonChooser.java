@@ -126,9 +126,9 @@ public class CannonChooser extends SubScene {
     }
 
     private void handleNextButtonRequest(ActionEvent e) {
-        MainMenuController.cannonColour = selectedButton.getId();
-        MainMenuController.setAnySubSceneShowing(true);
-        MainMenuController.setSubSceneShowing(SubScenes.NameInputter);
+        MainMenu.cannonColour = selectedButton.getId();
+        MainMenu.setAnySubSceneShowing(true);
+        MainMenu.setSubSceneShowing(SubScenes.NameInputter);
         AnchorPane root = (AnchorPane) this.getRoot();
         AnchorPane mainAP = (AnchorPane) root.getScene().getRoot();
         System.out.println("mainAP.getChildren() = " + mainAP.getChildren());

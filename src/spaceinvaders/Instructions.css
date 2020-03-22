@@ -10,4 +10,5 @@
 }
 .label {
     -fx-text-fill:white;
+    -fx-font-family:"Lucida Console";
 }

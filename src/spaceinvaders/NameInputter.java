@@ -23,6 +23,7 @@ public class NameInputter extends SubScene {
     private Button nextButton;
     private ErrorLabel errorLabel;
     private boolean nextButtonShowing = false;
+    public static String name = "";
 
     public NameInputter() {
         super(new AnchorPane(), 560, 440);
@@ -80,6 +81,10 @@ public class NameInputter extends SubScene {
     }
 
     public void moveSubScene() {
+        nameTF.setText(name);
+        if (!nameTF.getText().isEmpty()) {
+            showNextButton();
+        }
         TranslateTransition transition = new TranslateTransition();
         transition.setDuration(Duration.seconds(0.3));
         transition.setNode(this);
@@ -98,7 +103,15 @@ public class NameInputter extends SubScene {
     }
 
     private void handleBackRequest() {
-        this.moveSubScene();
+        MainMenu.setAnySubSceneShowing(true);
+        MainMenu.setSubSceneShowing(SubScenes.CannonChooser);
+        AnchorPane mainAP = (AnchorPane) root.getScene().getRoot();
+        mainAP.getChildren().forEach(node -> {
+            if (node instanceof CannonChooser) {
+                this.moveSubScene();
+                ((CannonChooser) node).moveSubScene();
+            }
+        });
     }
 
     private void showNextButton() {
@@ -106,7 +119,6 @@ public class NameInputter extends SubScene {
         nextButton = new Button("NEXT");
         nextButton.setId("nextButton");
         nextButton.setOnAction(e -> handleNextButtonRequest(e));
-        AnchorPane root = (AnchorPane) this.getRoot();
         root.getChildren().add(nextButton);
         nextButton.setLayoutX(340);
         nextButton.setLayoutY(370);
@@ -134,9 +146,11 @@ public class NameInputter extends SubScene {
         System.out.println("errorLabel.isHidden() = " + errorLabel.isHidden());
         if (!valid && errorLabel.isHidden()) {
             toggleErrorLabel();
-        } else if (valid && !errorLabel.isHidden()) {
-            toggleErrorLabel();
-            Scene scene = new GameScreen(nameTF.getText(), MainMenuController.cannonColour);
+        } else if (valid) {
+            NameInputter.name = nameTF.getText();
+            MainMenu.setAnySubSceneShowing(false);
+            MainMenu.setSubSceneShowing(null);
+            Scene scene = new GameScreen(nameTF.getText(), MainMenu.cannonColour);
             Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             newStage.setScene(scene);
             newStage.show();
@@ -144,8 +158,8 @@ public class NameInputter extends SubScene {
     }
 
     private boolean confirmName() {
-        String name = nameTF.getText();
-        for (char character : name.toCharArray()) {
+        String nameToCheck = nameTF.getText();
+        for (char character : nameToCheck.toCharArray()) {
             if (!Character.isAlphabetic(character)) {
                 return false;
             }

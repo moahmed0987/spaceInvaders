@@ -45,17 +45,10 @@ public class EndGame extends SubScene {
         // init exitbutton
         Button exitButton = new Button("EXIT");
         exitButton.setOnAction(e -> {
-            Parent parent = null;
-            try {
-                parent = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
-            } catch (IOException ioe) {
-                System.out.println("Error: " + e);
-            }
-            Scene scene = new Scene(parent);
+            MainMenu scene = new MainMenu();
             Stage newStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             newStage.setScene(scene);
             newStage.show();
-
         });
 
         // set coordinates of components in root
@@ -67,7 +60,7 @@ public class EndGame extends SubScene {
         playAgain.setLayoutY(210);
         exitButton.setLayoutX(165);
         exitButton.setLayoutY(280);
-        
+
         // add components to root
         root.getChildren().addAll(gameOver, details, playAgain, exitButton);
 

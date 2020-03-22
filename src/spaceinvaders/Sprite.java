@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 public class Sprite extends ImageView {
 
     private String type;
-    private boolean dead;
+    private boolean dead = false;
     private final double widthOfSprite, heightOfSprite;
 
     public Sprite(double x, double y, String type, Image image) {
@@ -25,9 +25,9 @@ public class Sprite extends ImageView {
         }
     }
 
-    public void moveRight(double x) {
-        if (validMove("RIGHT", this.getTranslateX(), this.getTranslateX() + x)) {
-            this.setTranslateX(this.getTranslateX() + x);
+    public void moveRight(double newX) {
+        if (validMove("RIGHT", this.getTranslateX(), this.getTranslateX() + newX)) {
+            this.setTranslateX(this.getTranslateX() + newX);
         }
     }
 
