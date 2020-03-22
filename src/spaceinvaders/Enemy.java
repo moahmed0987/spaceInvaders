@@ -13,6 +13,7 @@ public class Enemy extends Sprite {
     // set variables
     public static final double WIDTH = 100;
     private boolean removed = false;
+    private static final String ENEMY_IMAGE_PATH = "resources/enemy.png";
 
     // constructor that calls super (sprite) constructor
     public Enemy(double x, double y) {
@@ -23,7 +24,7 @@ public class Enemy extends Sprite {
     private static Image getEnemyImage() {
         Image enemyImage = null;
         try {
-            enemyImage = new Image(new FileInputStream("resources/enemy.png"), WIDTH, 0, true, false);
+            enemyImage = new Image(new FileInputStream(ENEMY_IMAGE_PATH), WIDTH, 0, true, false);
             return enemyImage;
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e);

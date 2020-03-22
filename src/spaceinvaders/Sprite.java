@@ -19,27 +19,27 @@ public class Sprite extends ImageView {
         this.dead = false;
     }
 
-    public void moveLeft(double newX) {
-        if (validMove("LEFT", this.getTranslateX(), this.getTranslateX() - newX)) {
-            this.setTranslateX(this.getTranslateX() - newX);
+    public void moveLeft(double newXPos) {
+        if (validMove("LEFT", this.getTranslateX(), this.getTranslateX() - newXPos)) {
+            this.setTranslateX(this.getTranslateX() - newXPos);
         }
     }
 
-    public void moveRight(double newX) {
-        if (validMove("RIGHT", this.getTranslateX(), this.getTranslateX() + newX)) {
-            this.setTranslateX(this.getTranslateX() + newX);
+    public void moveRight(double newXPos) {
+        if (validMove("RIGHT", this.getTranslateX(), this.getTranslateX() + newXPos)) {
+            this.setTranslateX(this.getTranslateX() + newXPos);
         }
     }
 
-    public void moveUp(double y) {
-        if (validMove("UP", this.getTranslateY(), this.getTranslateY() - y)) {
-            this.setTranslateY(this.getTranslateY() - y);
+    public void moveUp(double newYPos) {
+        if (validMove("UP", this.getTranslateY(), this.getTranslateY() - newYPos)) {
+            this.setTranslateY(this.getTranslateY() - newYPos);
         }
     }
 
-    public void moveDown(double y) {
-        if (validMove("DOWN", this.getTranslateY(), this.getTranslateY() + y)) {
-            this.setTranslateY(this.getTranslateY() + y);
+    public void moveDown(double newYPos) {
+        if (validMove("DOWN", this.getTranslateY(), this.getTranslateY() + newYPos)) {
+            this.setTranslateY(this.getTranslateY() + newYPos);
         }
     }
 

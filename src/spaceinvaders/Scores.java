@@ -13,13 +13,13 @@ import javafx.util.Duration;
 public class Scores extends SubScene {
 
     private boolean isHidden = true;
-    private AnchorPane root;
-    private Map<String, Integer> leaderboard = new Leaderboard().get();
+    private final AnchorPane root = (AnchorPane) this.getRoot();
+    private final Map<String, Integer> leaderboard = new Leaderboard().get();
+    private static final double WIDTH = 560;
+    private static final double HEIGHT = 440;
 
     public Scores() {
-        super(new AnchorPane(), 560, 440);
-        System.out.println("Leaderboard = " + leaderboard);
-        root = (AnchorPane) this.getRoot();
+        super(new AnchorPane(), WIDTH, HEIGHT);
         root.getStylesheets().add("spaceinvaders/Scores.css");
         setLayoutX(1060);
         setLayoutY(100);

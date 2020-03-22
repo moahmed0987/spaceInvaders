@@ -1,4 +1,4 @@
-  package spaceinvaders;
+package spaceinvaders;
 
 import javafx.animation.TranslateTransition;
 import javafx.scene.SubScene;
@@ -10,12 +10,11 @@ public class Instructions extends SubScene {
 
     private static final double WIDTH = 560;
     private static final double HEIGHT = 440;
-    private AnchorPane root;
+    private final AnchorPane root = (AnchorPane) this.getRoot();
     private boolean isHidden = true;
 
     public Instructions() {
         super(new AnchorPane(), WIDTH, HEIGHT);
-        root = (AnchorPane) this.getRoot();
         root.getStylesheets().add("spaceinvaders/Instructions.css");
         setLayoutX(1060);
         setLayoutY(100);
@@ -27,7 +26,7 @@ public class Instructions extends SubScene {
         // init instructionslabel
         Label instructionsLabel = new Label("Use left and right arrow keys to move\n"
                 + "Use up arrow key to shoot");
-        
+
         root.getChildren().addAll(titleLabel, instructionsLabel);
         titleLabel.setLayoutX(20);
         titleLabel.setLayoutY(20);

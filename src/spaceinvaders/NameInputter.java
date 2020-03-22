@@ -17,7 +17,9 @@ import javafx.util.Duration;
 
 public class NameInputter extends SubScene {
 
-    private AnchorPane root;
+    private static final double WIDTH = 560;
+    private static final double HEIGHT = 440;
+    private final AnchorPane root = (AnchorPane) this.getRoot();
     private boolean isHidden = true;
     private TextField nameTF;
     private Button nextButton;
@@ -26,8 +28,7 @@ public class NameInputter extends SubScene {
     public static String name = "";
 
     public NameInputter() {
-        super(new AnchorPane(), 560, 440);
-        root = (AnchorPane) this.getRoot();
+        super(new AnchorPane(), WIDTH, HEIGHT);
         root.getStylesheets().add("spaceinvaders/NameInputter.css");
         setLayoutX(1060);
         setLayoutY(100);
@@ -142,10 +143,8 @@ public class NameInputter extends SubScene {
 
     private void handleNextButtonRequest(Event e) {
         boolean valid = confirmName();
-        System.out.println("valid = " + valid);
-        System.out.println("errorLabel.isHidden() = " + errorLabel.isHidden());
         if (!valid && errorLabel.isHidden()) {
-            toggleErrorLabel();
+            errorLabel.toggleErrorLabel();
         } else if (valid) {
             NameInputter.name = nameTF.getText();
             MainMenu.setAnySubSceneShowing(false);
@@ -167,13 +166,4 @@ public class NameInputter extends SubScene {
         return true;
     }
 
-    private void toggleErrorLabel() {
-        if (errorLabel.isHidden()) {
-            errorLabel.setOpacity(1);
-            errorLabel.setHidden(false);
-        } else {
-            errorLabel.setOpacity(0);
-            errorLabel.setHidden(true);
-        }
-    }
 }

@@ -1,10 +1,7 @@
 package spaceinvaders;
 
-import java.io.IOException;
 import javafx.animation.TranslateTransition;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
@@ -16,11 +13,12 @@ import javafx.util.Duration;
 public class EndGame extends SubScene {
 
     private boolean isHidden = true;
-    private AnchorPane root;
+    private AnchorPane root = (AnchorPane) this.getRoot();
+    private static final double WIDTH = 530;
+    private static final double HEIGHT = 350;
 
     public EndGame(String name, int score, String cannonColour) {
-        super(new AnchorPane(), 530, 350);
-        root = (AnchorPane) this.getRoot();
+        super(new AnchorPane(), WIDTH, HEIGHT);
         root.getStylesheets().add("spaceinvaders/EndGame.css");
 
         Leaderboard lb = new Leaderboard();

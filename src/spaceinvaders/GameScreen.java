@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -20,7 +19,7 @@ public class GameScreen extends Scene {
     private static final double HEIGHT_OF_ENEMY_AREA = HEIGHT - 150;
     private Image cannonImage;
     private double timeForTimer;
-    private AnchorPane root;
+    private final AnchorPane root = (AnchorPane) this.getRoot();
     private PlayerCannon playerCannon;
     private AnimationTimer gameTimer;
     private int score;
@@ -28,7 +27,7 @@ public class GameScreen extends Scene {
     private boolean playerToMoveLeft, playerToMoveRight;
     private boolean playerAlreadyShot = false;
     private String cannonColour;
-    private Rectangle homeLine;
+    private final Rectangle homeLine;
     private final Label scoreLabel, healthLabel, enemiesOnScreenLabel;
     private final HealthBar healthBar = new HealthBar();
     private int currentLevel = 1;
@@ -55,8 +54,7 @@ public class GameScreen extends Scene {
         // start timer
         gameTimer.start();
 
-        // get this gamescene's layout and assign it to a private variable
-        root = (AnchorPane) this.getRoot();
+        // assign css file to root
         root.getStylesheets().add("spaceinvaders/GameScreen.css");
 
         // get the image of the player's chosen colour cannon

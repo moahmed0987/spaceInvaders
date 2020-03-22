@@ -6,25 +6,27 @@ import javafx.scene.shape.Rectangle;
 
 public class HealthBar extends HBox {
 
-    private Rectangle remaining, lost;
+    private static final double WIDTH = 200;
+    private static final double HEIGHT = 30;
+    private Rectangle healthRemainingBar, healthLostBar;
     private int remainingHealth, lostHealth;
 
     public HealthBar() {
-        remaining = new Rectangle(200, 30, Paint.valueOf("green"));
-        lost = new Rectangle(0, 30, Paint.valueOf("black"));
-        this.getChildren().addAll(remaining, lost);
+        healthRemainingBar = new Rectangle(WIDTH, HEIGHT, Paint.valueOf("green"));
+        healthLostBar = new Rectangle(0, HEIGHT, Paint.valueOf("black"));
+        this.getChildren().addAll(healthRemainingBar, healthLostBar);
     }
 
     public void updateHealthBar(int newHealth) {
         this.remainingHealth = newHealth;
         this.lostHealth = 100 - newHealth;
-        lost = new Rectangle(lostHealth * 2, 30, Paint.valueOf("black"));
-        remaining = new Rectangle(remainingHealth * 2, 30, Paint.valueOf("green"));
+        healthLostBar = new Rectangle(lostHealth * 2, HEIGHT, Paint.valueOf("black"));
+        healthRemainingBar = new Rectangle(remainingHealth * 2, HEIGHT, Paint.valueOf("green"));
 
-        this.getChildren().set(0, remaining);
-        this.getChildren().set(1, lost);
+        this.getChildren().set(0, healthRemainingBar);
+        this.getChildren().set(1, healthLostBar);
         if (remainingHealth <= 30) {
-            lost.setFill(Paint.valueOf("red"));
+            healthLostBar.setFill(Paint.valueOf("red"));
         }
     }
 

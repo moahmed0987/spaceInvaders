@@ -8,7 +8,7 @@ import javafx.scene.text.Font;
 public class ErrorLabel extends Label {
 
     private boolean isHidden = true;
-    
+
     public ErrorLabel(String text) {
         super(text);
         this.setTextFill(Paint.valueOf("red"));
@@ -17,12 +17,22 @@ public class ErrorLabel extends Label {
         this.setAlignment(Pos.CENTER);
         this.setFont(Font.font("Lucida Console", 30));
     }
-    
-    public boolean isHidden(){
+
+    public boolean isHidden() {
         return this.isHidden;
     }
-    
-    public void setHidden(boolean isHidden){
+
+    public void setHidden(boolean isHidden) {
         this.isHidden = isHidden;
+    }
+
+    public void toggleErrorLabel() {
+        if (this.isHidden()) {
+            this.setOpacity(1);
+            this.setHidden(false);
+        } else {
+            this.setOpacity(0);
+            this.setHidden(true);
+        }
     }
 }

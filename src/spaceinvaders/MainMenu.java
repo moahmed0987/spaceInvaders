@@ -10,19 +10,20 @@ import javafx.stage.Stage;
 
 public class MainMenu extends Scene {
 
-    private CannonChooser cannonChooser = new CannonChooser();
-    private NameInputter nameInputter = new NameInputter();
-    private Instructions instructions = new Instructions();
-    private Scores scores = new Scores();
+    private final CannonChooser cannonChooser = new CannonChooser();
+    private final NameInputter nameInputter = new NameInputter();
+    private final Instructions instructions = new Instructions();
+    private final Scores scores = new Scores();
     private static SubScenes subSceneShowing = null;
     private static boolean anySubSceneShowing = false;
     public static String name;
     public static String cannonColour;
-    private AnchorPane mainAP;
+    private final AnchorPane mainAP = (AnchorPane) this.getRoot();
+    private static final double WIDTH = 1060;
+    private static final double HEIGHT = 700;
 
     public MainMenu() {
-        super(new AnchorPane(), 1060, 700);
-        mainAP = (AnchorPane) this.getRoot();
+        super(new AnchorPane(), WIDTH, HEIGHT);
         mainAP.getStylesheets().add("spaceinvaders/MainMenu.css");
 
         // init playbutton
@@ -41,7 +42,7 @@ public class MainMenu extends Scene {
         instructionsButton.setOnAction(e -> handleInstructionsRequest(e));
         instructionsButton.setOnMouseEntered(e -> handleMouseEntered(e));
         instructionsButton.setOnMouseExited(e -> handleMouseExited(e));
-        
+
         // init scoresbutton
         Button scoresButton = new Button("LEADERBOARD");
         scoresButton.setId("scoresButton");
@@ -58,7 +59,7 @@ public class MainMenu extends Scene {
         exitButton.setOnAction(e -> handleExitRequest(e));
         exitButton.setOnMouseExited(e -> handleMouseExited(e));
         exitButton.setOnMouseEntered(e -> handleMouseEntered(e));
-        
+
         mainAP.getChildren().addAll(playButton, instructionsButton, scoresButton, exitButton);
         mainAP.getChildren().addAll(cannonChooser, instructions, nameInputter, scores);
     }
@@ -72,9 +73,6 @@ public class MainMenu extends Scene {
     }
 
     private void handlePlayRequest(ActionEvent e) {
-        System.out.println("BEFORE PLAYBUTTON");
-        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
-        System.out.println("subSceneShowing = " + subSceneShowing);
         if (!anySubSceneShowing) {
             cannonChooser.moveSubScene();
             anySubSceneShowing = true;
@@ -110,9 +108,6 @@ public class MainMenu extends Scene {
                 }
             }
         }
-        System.out.println("AFTER PLAYBUTTON");
-        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
-        System.out.println("subSceneShowing = " + subSceneShowing);
     }
 
     private void handleExitRequest(ActionEvent e) {
@@ -121,9 +116,6 @@ public class MainMenu extends Scene {
     }
 
     private void handleScoresRequest(ActionEvent e) {
-        System.out.println("BEFORE SCORESBUTTON");
-        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
-        System.out.println("subSceneShowing = " + subSceneShowing);
         if (!anySubSceneShowing) {
             scores.moveSubScene();
             anySubSceneShowing = true;
@@ -159,15 +151,9 @@ public class MainMenu extends Scene {
                 }
             }
         }
-        System.out.println("AFTER SCORESBUTTON");
-        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
-        System.out.println("subSceneShowing = " + subSceneShowing);
     }
 
     private void handleInstructionsRequest(ActionEvent e) {
-        System.out.println("BEFORE INSTRUCTIONSBUTTON");
-        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
-        System.out.println("subSceneShowing = " + subSceneShowing);
         if (!anySubSceneShowing) {
             instructions.moveSubScene();
             anySubSceneShowing = true;
@@ -203,10 +189,6 @@ public class MainMenu extends Scene {
                 }
             }
         }
-
-        System.out.println("AFTER INSTRUCTIONSBUTTON");
-        System.out.println("anySubSceneShowing = " + anySubSceneShowing);
-        System.out.println("subSceneShowing = " + subSceneShowing);
     }
 
     public static void setAnySubSceneShowing(boolean anySubSceneShowing) {

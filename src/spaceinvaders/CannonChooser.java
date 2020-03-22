@@ -131,7 +131,6 @@ public class CannonChooser extends SubScene {
         MainMenu.setSubSceneShowing(SubScenes.NameInputter);
         AnchorPane root = (AnchorPane) this.getRoot();
         AnchorPane mainAP = (AnchorPane) root.getScene().getRoot();
-        System.out.println("mainAP.getChildren() = " + mainAP.getChildren());
         mainAP.getChildren().forEach(node -> {
             if (node instanceof NameInputter) {
                 this.moveSubScene();
