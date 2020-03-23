@@ -63,12 +63,7 @@ public class Leaderboard {
         for (Map.Entry<String, Integer> entry : list) {
             if (entry.getKey() != null) {
                 if (entry.getKey().equals(x[0])) {
-                    if (Integer.parseInt(x[1]) >= entry.getValue()) {
-                        System.out.println("true");
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return Integer.parseInt(x[1]) >= entry.getValue();
                 }
             }
         }

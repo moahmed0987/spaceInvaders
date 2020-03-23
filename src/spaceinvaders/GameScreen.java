@@ -166,9 +166,6 @@ public class GameScreen extends Scene {
             enemiesInLastRow = 8;
         }
 
-        System.out.println("numberOfRows = " + numberOfRows);
-        System.out.println("enemiesInLastRow = " + enemiesInLastRow);
-
         // values for each enemy's position
         double xIncrementPerEnemy = (WIDTH / (enemiesInLastRow + 1));
         double yIncrememtPerEnemy = (HEIGHT_OF_ENEMY_AREA / (numberOfRows + 1));
@@ -262,6 +259,17 @@ public class GameScreen extends Scene {
                             score += 10;
                             // update scorelabel
                             scoreLabel.setText("SCORE: " + score);
+
+                            // for every 1000 score points, regain 30 health
+                            if (score % 1000 == 0 && playerCannon.getHealth() < 100) {
+                                if (playerCannon.getHealth() < 70) {
+                                    playerCannon.setHealth(playerCannon.getHealth() + 30);
+                                } else {
+                                    playerCannon.setHealth(100);
+                                }
+                                healthBar.updateHealthBar(playerCannon.getHealth());
+                                healthLabel.setText("HEALTH: " + playerCannon.getHealth());
+                            }
                         }
                     });
                     break;
